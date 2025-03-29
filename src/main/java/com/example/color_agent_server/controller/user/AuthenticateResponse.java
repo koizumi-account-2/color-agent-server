@@ -8,8 +8,10 @@ import org.openapitools.example.model.UserResponseDTO;
 @Getter
 public class AuthenticateResponse {
     private final UserResponseDTO userResponseDTO;
+    private final String jwt;
 
-    public AuthenticateResponse(String role,Long userID,String email){
+    public AuthenticateResponse(String role,Long userID,String email,String jwt){
         this.userResponseDTO = new UserResponseDTO(userID,role,email);
+        this.jwt = jwt;
     }
 }
