@@ -6,6 +6,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import org.openapitools.example.model.UserResponseDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.http.Cookie;
@@ -69,13 +70,12 @@ public class JwtUtil {
     }
 
     //JWTの解読
-    //JWT -> Email
-    public String getEmailFromJWT(String jwt){
-        return Jwts.parser()
+    public UserResponseDTO getUserInfoFromJWT(String jwt){
+        var payload = Jwts.parser()
                 .verifyWith(getSignWithKey())
                 .build()
                 .parseSignedClaims(jwt)
-                .getPayload()
-                .getSubject();
+                .getPayload();
+        return new UserResponseDTO(null,"WW",payload.getSubject());
     }
 }

@@ -3,6 +3,7 @@ package com.example.color_agent_server.security.service;
 import com.example.color_agent_server.repository.user.UserRepository;
 import com.example.color_agent_server.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
