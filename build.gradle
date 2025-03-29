@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.openapi.generator' version '7.7.0'
 }
 
 group = 'com.example'
@@ -25,6 +26,9 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.8'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.4'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -35,3 +39,27 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+task buildApiDoc(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+	generatorName.set("html2")
+	inputSpec.set("$rootDir/src/main/resources/api-schema.yaml")
+	outputDir.set("$buildDir/apidoc")
+}
+
+task buildSpringServer(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+	generatorName.set("spring")
+	inputSpec.set("$rootDir/src/main/resources/api-schema.yaml")
+	outputDir.set("$buildDir/spring")
+	apiPackage.set("com.example.color_agent_server.controller")
+	invokerPackage.set("com.example.color_agent_server.model")
+	modelPackage.set("org.openapitools.example.model")
+	configOptions.set([
+			interfaceOnly: "true",
+			useSpringBoot3: "true"
+	])
+}
+openApiValidate {
+	inputSpec = "$rootDir/src/main/resources/api-schema.yaml"
+}
+
+compileJava.dependsOn tasks.buildSpringServer
+sourceSets.main.java.srcDir "$buildDir/spring/src/main/java"

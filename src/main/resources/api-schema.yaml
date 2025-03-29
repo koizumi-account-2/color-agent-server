@@ -1,0 +1,17 @@
+openapi: "3.0.0"
+info:
+  title: "COLOR-AGENT-SERVER"
+  version: "1.0"
+  description: "API DOC"
+servers:
+  - url: https://localhost:8080/v1
+paths:
+  /health:
+    get:
+      tags:
+        - opts
+      operationId: checkHealth
+      responses:
+        '200':
+          description: OK
+
