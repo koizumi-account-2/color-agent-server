@@ -16,8 +16,7 @@ public class AuthController implements AuthApi {
     private final UserService userService;
 
     @Override
-    public ResponseEntity<UserResponseDTO> login(LoginUserForm loginUserForm) {
-        userService.getUserByEmail(loginUserForm.getEmail());
-        return AuthApi.super.login(loginUserForm);
+    public ResponseEntity<Void> checkAuth() {
+        return ResponseEntity.ok().build();
     }
 }
