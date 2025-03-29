@@ -1,0 +1,10 @@
+-- T_USER テーブルの削除
+DROP TABLE IF EXISTS T_USER;
+
+CREATE TABLE T_USER (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- ユーザーID (自動インクリメント)
+    email VARCHAR(255) NOT NULL UNIQUE, -- メールアドレス
+    password VARCHAR(255) NOT NULL,     -- パスワード（ハッシュ化）
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 作成日時
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- 更新日時
+);

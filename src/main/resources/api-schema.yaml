@@ -5,6 +5,13 @@ info:
   description: "API DOC"
 servers:
   - url: https://localhost:8080/v1
+tags:
+  - name: opts
+    description: 運用監視関連のAPI
+  - name: auth
+    description: ユーザー管理
+  - name: meeting
+    description: ミーティング
 paths:
   /health:
     get:
@@ -14,4 +21,136 @@ paths:
       responses:
         '200':
           description: OK
+  /auth/login:
+    post:
+      tags:
+        - auth
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginUserForm"
+      responses:
+        '200':
+          description: LOGIN SUCCESS
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponseDTO"
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: JSESSIONID=abcde12345; Path=/; HttpOnly
+        '403':
+          description: ForbiddenError
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        '404':
+          description: UserNotFoundError
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceNotFoundError"
 
+components:
+  schemas:
+    LoginUserForm:
+      description: ログイン時のユーザー情報
+      properties:
+        email:
+          type: string
+          description: "ログインEmail"
+          minLength: 1
+          maxLength: 100
+          example: sample@test.com
+        password:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: sample@test.com
+          description: "パスワード"
+      required:
+        - email
+        - password
+    UserResponseDTO:
+      description: ログイン時の結果情報
+      properties:
+        userID:
+          type: integer
+          format: int64
+          description: "ユーザーID"
+        role:
+          type: string
+          description: "ROLE"
+        email:
+          type: string
+          description: "ログインEmail"
+          minLength: 1
+          maxLength: 100
+          example: sample@test.com
+      required:
+        - userID
+        - role
+        - email
+    ForbiddenError:
+      description: アクセス権限がありません
+      type: object
+      properties:
+        title:
+          type: string
+          description: "エラーのタイプ"
+          default: "パスワードが違います"
+        detail:
+          type: string
+          description: "エラーの詳細"
+      required:
+        - title
+        - detail
+    ResourceNotFoundError:
+      description: 指定したリソースは存在しない
+      type: object
+      properties:
+        title:
+          type: string
+          description: "エラーのタイプ"
+          default: "Resource Not Found"
+        detail:
+          type: string
+          description: "エラーの詳細"
+      required:
+        - title
+        - detail
+    BadRequestError:
+      description: 不正リクエスト
+      type: object
+      properties:
+        title:
+          type: string
+          description: エラータイトル
+          default: "BadRequest"
+        detail:
+          type: string
+          description: ""
+          default: "リクエストが不正です。再度リクエストを送信してください"
+        invalid-params:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvalidParam"
+    InvalidParam:
+      description: "不正リクエストについての詳細"
+      type: object
+      properties:
+        name:
+          type: string
+          description: エラーが発生したフィールド名
+        reason:
+          type: string
+          description: エラーの理由
+      required:
+        - name
+        - reason
