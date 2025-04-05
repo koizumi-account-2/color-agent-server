@@ -25,9 +25,9 @@ public class AuthService {
                         loginUserForm.getPassword()
                 )
         );
-        String token =jwtUtil.generateJWT(123L,auth);
+        String token =jwtUtil.generateJWT(auth);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        return new AuthenticateResponse("AA",123L,auth.getName(),token);
+        return new AuthenticateResponse(auth.getAuthorities().stream().map(Object::toString).toList(),123L,auth.getName(),token);
 
     }
 }

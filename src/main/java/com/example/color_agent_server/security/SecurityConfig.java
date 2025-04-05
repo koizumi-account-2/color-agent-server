@@ -1,6 +1,6 @@
 package com.example.color_agent_server.security;
 
-import com.example.color_agent_server.security.filter.TestFilter;
+import com.example.color_agent_server.security.filter.JwtFilter;
 import com.example.color_agent_server.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final TestFilter testFilter;
+    private final JwtFilter jwtFilter;
     private final PasswordEncoder noPasswordEncoder;
 
     @Bean
@@ -31,9 +31,9 @@ public class SecurityConfig {
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login","/health").permitAll()
+                        .requestMatchers("/auth/login","/auth/logout","/health","/presentation/**").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(testFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

@@ -10,8 +10,8 @@ tags:
     description: 運用監視関連のAPI
   - name: auth
     description: ユーザー管理
-  - name: meeting
-    description: ミーティング
+  - name: presentation
+    description: プレゼンテーション
 paths:
   /health:
     get:
@@ -21,7 +21,70 @@ paths:
       responses:
         '200':
           description: OK
-  /login:
+  /presentation/persona:
+    post:
+      tags:
+        - presentation
+      operationId: createPersona
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InterviewState"
+      responses:
+        '201':
+          description: Create Persona Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewState"
+  /presentation/confirm:
+    patch:
+      tags:
+        - presentation
+      operationId: confirmPersona
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InterviewState"
+      responses:
+        '201':
+          description: Confirm Persona Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewState"
+
+
+  /auth:
+    get:
+      tags:
+        - opts
+      operationId: checkAuth
+      responses:
+        '200':
+          description: CHECKED SUCCESS
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponseDTO"
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      operationId: logout
+      responses:
+        '200':
+          description: LOGOUT SUCCESS
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: JSESSIONID=abcde12345; Path=/; HttpOnly
+  /auth/login:
     post:
       tags:
         - auth
@@ -56,17 +119,121 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResourceNotFoundError"
-  /auth:
-    get:
-      tags:
-        - opts
-      operationId: checkAuth
-      responses:
-        '200':
-          description: OK
+
 
 components:
   schemas:
+    Persona:
+      type: object
+      description: ペルソナの情報
+      required:
+        - name
+        - background
+      properties:
+        name:
+          type: string
+          description: "ペルソナの名前"
+          minLength: 1
+          maxLength: 30
+          example: 田中　ゆうこ
+        background:
+          type: string
+          description: "ペルソナの背景"
+          minLength: 1
+          maxLength: 400
+          example: 23歳です。
+    PresentationContent:
+      type: object
+      title: PresentationContent
+      required:
+        - contentName
+        - contentPurpose
+        - contentDetail
+        - contentTime
+      properties:
+        contentName:
+          type: string
+          description: プレゼンテーションのコンテンツ名
+        contentPurpose:
+          type: string
+          description: プレゼンテーションのコンテンツの目的
+        contentDetail:
+          type: string
+          description: プレゼンテーションのコンテンツの詳細
+        contentTime:
+          type: integer
+          description: プレゼンテーションのコンテンツの時間
+    InterviewContent:
+      type: object
+      title: InterviewContent
+      required:
+        - persona
+        - question
+        - answer
+      properties:
+        persona:
+          $ref: '#/components/schemas/Persona'
+          description: インタビュー対象のペルソナ
+        question:
+          type: string
+          description: インタビューの質問
+        answer:
+          type: string
+          description: インタビューの回答
+
+    Presentation:
+      type: object
+      title: Presentation
+      required:
+        - title
+        - contents
+      properties:
+        title:
+          type: string
+          description: プレゼンテーションのタイトル
+        contents:
+          type: array
+          description: プレゼンテーションのコンテンツのリスト
+          items:
+            $ref: '#/components/schemas/PresentationContent'
+    InterviewState:
+      type: object
+      title: InterviewState
+      required:
+        - thread_id
+        - user_request
+      properties:
+        thread_id:
+          type: string
+          description: リクエストのID
+        user_request:
+          type: string
+          description: ユーザーのリクエスト
+        persona_list:
+          type: array
+          description: ペルソナのリスト
+          items:
+            $ref: '#/components/schemas/Persona'
+        persona_confirmed:
+          type: boolean
+          default: false
+          description: ペルソナのユーザによる確認
+        interview_result:
+          type: array
+          description: 実施されたインタビューのリスト
+          items:
+            $ref: '#/components/schemas/InterviewContent'
+        iteration:
+          type: integer
+          default: 0
+          description: ペルソナ生成とインタビューの反復回数
+        is_satisfied:
+          type: boolean
+          default: false
+          description: 情報が充分かどうか
+        presentation:
+          description: プレゼンテーションのコンテンツ
+          $ref: '#/components/schemas/Presentation'
     LoginUserForm:
       description: ログイン時のユーザー情報
       properties:
@@ -93,7 +260,9 @@ components:
           format: int64
           description: "ユーザーID"
         role:
-          type: string
+          type: array
+          items:
+            type: string
           description: "ROLE"
         email:
           type: string

@@ -5,6 +5,7 @@ public record UserRecord(
         Long id,
         String email,
         String password,
+        String authorityId,
         Timestamp createdAt,
         Timestamp updatedAt
 ) {
