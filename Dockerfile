@@ -6,7 +6,8 @@ CMD ["bash"]
 FROM base AS test-and-build
 COPY . /workspace
 WORKDIR /workspace
-RUN ./gradle build -x test --info
+RUN chmod +x ./gradlew
+RUN ./gradlew build -x test --info
 
 # Stage 2: Runtime
 FROM openjdk:17 AS production
