@@ -1,10 +1,7 @@
 package com.example.color_agent_server.controller.presentation;
 
 import com.example.color_agent_server.controller.PresentationApi;
-import com.example.color_agent_server.util.PresentationWebClient;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.openapitools.example.model.CreatePersonaForm;
 import org.openapitools.example.model.InterviewState;
 import org.openapitools.example.model.Persona;
 import org.springframework.http.ResponseEntity;

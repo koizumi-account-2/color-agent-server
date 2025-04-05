@@ -1,12 +1,14 @@
 # Stage 1: Build
-FROM gradle:8.4-jdk17 AS build
-WORKDIR /app
-COPY . .
-RUN gradle build -x test
+FROM gradle:7 AS base
+CMD ["bash"]
+
+# test-and-build
+FROM base AS test-and-build
+COPY . /workspace
+WORKDIR /workspace
+RUN ./gradlew build -x test
 
 # Stage 2: Runtime
-FROM eclipse-temurin:17-jdk
-WORKDIR /app
-COPY --from=build /app/build/libs/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+FROM openjdk:17 AS production
+COPY --from=test-and-build /app/build/libs/*.jar app.jar
+CMD [ "java", "-jar", "api.jar" ]

@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $ECR_REGISTRY/$REPOSITORY_NAME:latest .
+          docker image build --target production -t $ECR_REGISTRY/$REPOSITORY_NAME:latest .
 
       - name: Push Docker image to ECR
         run: |
