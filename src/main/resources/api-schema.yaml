@@ -21,44 +21,98 @@ paths:
       responses:
         '200':
           description: OK
-  /presentation/persona:
+  /user/{id}:
+    get:
+      tags:
+        - auth
+      operationId: getUserContext
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: CHECKED SUCCESS
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserContextEntity"
+  /user/{id}/context:
     post:
       tags:
-        - presentation
-      operationId: createPersona
+        - auth
+      operationId: updateUserContext
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/InterviewState"
+              type: object
+              required:
+                - userContext
+              properties:
+                userContext:
+                  type: string
       responses:
-        '201':
-          description: Create Persona Success
+        '200':
+          description: CHECKED SUCCESS
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InterviewState"
-  /presentation/confirm:
-    patch:
+                $ref: "#/components/schemas/UserContextEntity"
+  /user/{id}/totaltokens:
+    post:
       tags:
-        - presentation
-      operationId: confirmPersona
+        - auth
+      operationId: updateTotalTokens
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/InterviewState"
+              type: object
+              required:
+                - totalTokens
+              properties:
+                totalTokens:
+                  type: integer
+                  format: int64
       responses:
-        '201':
-          description: Confirm Persona Success
+        '200':
+          description: CHECKED SUCCESS
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InterviewState"
-
-
+                $ref: "#/components/schemas/UserContextEntity"
   /auth:
     get:
       tags:
@@ -123,6 +177,32 @@ paths:
 
 components:
   schemas:
+    UserContextEntity:
+      type: object
+      description: ユーザの情報
+      required:
+        - id
+        - userContext
+        - totalTokens
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: "id"
+          example: 123
+        userContext:
+          type: string
+          description: "ユーザの情報"
+          minLength: 1
+          maxLength: 255
+          example: 足が速いです
+        totalTokens:
+          type: integer
+          format: int64
+          description: "使用済みのtoken数"
+          maxLength: 100000
+          example: 12
+
     Persona:
       type: object
       description: ペルソナの情報

@@ -27,7 +27,8 @@ public class AuthService {
         );
         String token =jwtUtil.generateJWT(auth);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        return new AuthenticateResponse(auth.getAuthorities().stream().map(Object::toString).toList(),123L,auth.getName(),token);
+        CustomUserDetails userDetails = (CustomUserDetails)(auth.getPrincipal());
+        return new AuthenticateResponse(auth.getAuthorities().stream().map(Object::toString).toList(),userDetails.getId(),auth.getName(),token);
 
     }
 }

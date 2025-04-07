@@ -17,3 +17,18 @@ CREATE TABLE T_USER (
     FOREIGN KEY (authority_id) REFERENCES T_AUTHORITY(id) -- 外部キー制約
 );
 
+CREATE TABLE T_USER_CONTEXT (
+    id INT PRIMARY KEY, -- ユーザーID
+    user_context VARCHAR(255), -- ユーザーの背景
+    total_tokens INTEGER,              -- 合計トークン数（上記の合計）
+    FOREIGN KEY (id) REFERENCES T_USER(id) -- 外部キー制約
+);
+
+CREATE TABLE T_USER_AGENT_USAGE (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- ユーザーID (自動インクリメント)
+    email VARCHAR(255) NOT NULL UNIQUE, -- メールアドレス
+    prompt_tokens INTEGER NOT NULL,             -- プロンプトのトークン数
+    completion_tokens INTEGER NOT NULL,         -- レスポンスのトークン数
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- ログ作成日時
+    FOREIGN KEY (email) REFERENCES T_USER(email) -- 外部キー制約
+);
