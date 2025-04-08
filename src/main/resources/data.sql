@@ -10,3 +10,4 @@ INSERT INTO T_USER (email, password,authority_id) VALUES
 
 INSERT INTO T_USER_CONTEXT (id,user_context, total_tokens) VALUES
 (1,'IT', 123);
+

@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Mapper
 public interface UserRepository {
-    @Select("SELECT * FROM T_USER WHERE email = #{email}")
+    @Select("SELECT * FROM t_user WHERE email = #{email}")
     Optional<UserRecord> findByEmail(String email);
 }

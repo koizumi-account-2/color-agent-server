@@ -7,16 +7,16 @@ import java.util.Optional;
 
 @Mapper
 public interface UserContextRepository {
-    @Select("SELECT * FROM T_USER_CONTEXT WHERE id=#{id}")
+    @Select("SELECT * FROM t_user_context WHERE id=#{id}")
     Optional<UserContextRecord> findById(Long id);
 
     @Insert("""
-INSERT INTO T_USER_CONTEXT (id,user_context,total_tokens) VALUES(#{userContext.id},#{userContext.userContext},#{userContext.totalTokens})""")
+INSERT INTO t_user_context (id,user_context,total_tokens) VALUES(#{userContext.id},#{userContext.userContext},#{userContext.totalTokens})""")
     void create(@Param("userContext") UserContextRecord userContext);
 
     @Update("""
             <script>
-                UPDATE T_USER_CONTEXT
+                UPDATE t_user_context
                 <set>
                     <if test="userContext.userContext != null">
                         user_context=#{userContext.userContext},

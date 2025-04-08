@@ -12,4 +12,4 @@ RUN ./gradlew build -x test --info
 # Stage 2: Runtime
 FROM openjdk:17 AS production
 COPY --from=test-and-build /workspace/build/libs/*.jar app.jar
-CMD [ "java", "-jar", "api.jar" ]
+CMD [ "java", "-jar", "app.jar" ]
