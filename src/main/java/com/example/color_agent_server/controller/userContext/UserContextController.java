@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.openapitools.example.model.UpdateTotalTokensRequest;
 import org.openapitools.example.model.UpdateUserContextRequest;
 import org.openapitools.example.model.UserContextEntity;
-import org.openapitools.example.model.UserContextForm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
