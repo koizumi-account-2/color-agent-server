@@ -8,10 +8,8 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 public class HealthController implements HealthApi {
-    private final PresentationWebClient presentationWebClient;
     @Override
     public ResponseEntity<Void> checkHealth() {
-        presentationWebClient.get();
         return ResponseEntity.ok().build();
     }
 }
