@@ -10,11 +10,11 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class HealthController implements HealthApi {
 
-    @Value("${datasource.url}")
+    @Value("${spring.datasource.url}")
     private String url;
-    @Value("${datasource.username}")
+    @Value("${spring.datasource.username}")
     private String userName;
-    @Value("${datasource.password}")
+    @Value("${spring.datasource.password}")
     private String password;
     @Override
     public ResponseEntity<Void> checkHealth() {
