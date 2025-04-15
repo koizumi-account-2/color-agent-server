@@ -51,8 +51,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        //config.setAllowedOrigins(List.of(frontUrl)); // Originを明示
-        config.addAllowedOriginPattern("*"); // Originを明示
+        config.setAllowedOrigins(List.of(frontUrl)); // Originを明示
+        //config.addAllowedOriginPattern(frontUrl); // Originを明示
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
